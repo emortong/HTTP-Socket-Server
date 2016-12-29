@@ -1,5 +1,4 @@
-module.exports = `
-@import url(http://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab);
+module.exports = `@import url(http://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab);
 
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126

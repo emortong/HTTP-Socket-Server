@@ -55,28 +55,28 @@ let server = net.createServer((socket) => {
       case '/':
       case '/index.html':
       header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.index.content_type}\nContent-Length: ${files.index.content_length}\n\n`;
-      body = files.index.body + '\n\n';;
+      body = files.index.body;
       break;
 
       case '/hydrogen.html':
       header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.hydrogen.content_type}\nContent-Length: ${files.hydrogen.content_length}\n\n`;
-      body = files.hydrogen.body + '\n\n';;
+      body = files.hydrogen.body;
       break;
 
       case '/helium.html':
-      header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.helium.content_type}\nContent-Length: ${files.helium.content_length}\n\n`
-      body = files.helium.body + '\n\n';;
+      header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.helium.content_type}\nContent-Length: ${files.helium.content_length}\n\n`;
+      body = files.helium.body;
       break;
 
 
       case '/css/styles.css':
-      header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.styles.content_type}\nContent-Length: ${files.styles.content_length}\n\n`
-      body = files.styles.body + '\n\n';
+      header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.styles.content_type}\nContent-Length: ${files.styles.content_length}\n\n`;
+      body = files.styles.body;
       break;
 
       default:
-      header = `HTTP/1.1 404 NOT FOUND\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.notFound.content_type}\nContent-Length: ${files.notFound.content_length}\n\n`
-      body = files.notFound.body + '\n\n';
+      header = `HTTP/1.1 404 NOT FOUND\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.notFound.content_type}\nContent-Length: ${files.notFound.content_length}\n\n`;
+      body = files.notFound.body;
       break;
 
     }
@@ -85,6 +85,7 @@ let server = net.createServer((socket) => {
       socket.write(header);
       socket.end();
     } else if(reqSpec[0] === 'GET') {
+      socket.write(header);
       socket.write(body);
       socket.end();
     }
