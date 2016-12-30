@@ -6,6 +6,9 @@ const hydrogen = require('./hydrogen.js');
 const helium = require('./helium.js');
 const notFound = require('./404.js');
 const styles = require('./styles.js');
+let host;
+let responseHeaderStorage = [];
+
 
 let files = {
   index: {
@@ -39,60 +42,67 @@ let server = net.createServer((socket) => {
 
   socket.on(EVENT_DATA, (data) => {
     data = data.toString().trim();
-    console.log(data);
-    let reqArr = data.split('\n');
-    let reqSpec = reqArr[0].split(' '); // request type, path and version
-    let date = new Date();
-    date.toUTCString();
-    let server = 'estefania/0.0.1';
-    let body;
-    let header;
-    let content_type;
-    let content_length;
+      console.log(data)
+      storeResponseHeaders(data);
+      console.log(responseHeaderStorage);
 
+      let reqArr = data.split('\n');
+      let reqSpec = reqArr[0].split(' '); // request type, path and version
+      let date = new Date();
+      date.toUTCString();
+      let server = 'estefania/0.0.1';
+      let body;
+      let header;
+      let content_type;
+      let content_length;
 
-    switch(reqSpec[1]) {
-      case '/':
-      case '/index.html':
-      header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.index.content_type}\nContent-Length: ${files.index.content_length}\n\n`;
-      body = files.index.body;
-      break;
+      switch(reqSpec[1]) {
+        case '/':
+        case '/index.html':
+        header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.index.content_type}\nContent-Length: ${files.index.content_length}\n\n`;
+        body = files.index.body;
+        break;
 
-      case '/hydrogen.html':
-      header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.hydrogen.content_type}\nContent-Length: ${files.hydrogen.content_length}\n\n`;
-      body = files.hydrogen.body;
-      break;
+        case '/hydrogen.html':
+        header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.hydrogen.content_type}\nContent-Length: ${files.hydrogen.content_length}\n\n`;
+        body = files.hydrogen.body;
+        break;
 
-      case '/helium.html':
-      header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.helium.content_type}\nContent-Length: ${files.helium.content_length}\n\n`;
-      body = files.helium.body;
-      break;
+        case '/helium.html':
+        header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.helium.content_type}\nContent-Length: ${files.helium.content_length}\n\n`;
+        body = files.helium.body;
+        break;
 
+        case '/css/styles.css':
+        header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.styles.content_type}\nContent-Length: ${files.styles.content_length}\n\n`;
+        body = files.styles.body;
+        break;
 
-      case '/css/styles.css':
-      header = `HTTP/1.1 200 OK\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.styles.content_type}\nContent-Length: ${files.styles.content_length}\n\n`;
-      body = files.styles.body;
-      break;
+        default:
+        header = `HTTP/1.1 404 NOT FOUND\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.notFound.content_type}\nContent-Length: ${files.notFound.content_length}\n\n`;
+        body = files.notFound.body;
+        break;
+      }
 
-      default:
-      header = `HTTP/1.1 404 NOT FOUND\nDate: ${date}\nServer: ${server}\nContent-Type: ${files.notFound.content_type}\nContent-Length: ${files.notFound.content_length}\n\n`;
-      body = files.notFound.body;
-      break;
-
-    }
-
-    if(reqSpec[0] === 'HEAD') {
-      socket.write(header);
-      socket.end();
-    } else if(reqSpec[0] === 'GET') {
-      socket.write(header);
-      socket.write(body);
-      socket.end();
-    }
-
+      if(reqSpec[0] === 'HEAD') {
+        socket.write(header);
+        socket.end();
+      } else if(reqSpec[0] === 'GET') {
+        socket.write(header);
+        socket.write(body);
+        socket.end();
+      }
+    // }
   })
 })
 
 server.listen(PORT, () => {
   console.log('opened server on', server.address())
 })
+
+function storeResponseHeaders(data) {
+  let responseHeader = {
+    header: data
+  }
+  responseHeaderStorage.push(responseHeader);
+}
