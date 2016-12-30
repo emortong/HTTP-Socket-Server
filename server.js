@@ -9,7 +9,6 @@ const styles = require('./styles.js');
 let host;
 let responseHeaderStorage = [];
 
-
 let files = {
   index: {
     body: index,
@@ -44,7 +43,6 @@ let server = net.createServer((socket) => {
     data = data.toString().trim();
       console.log(data)
       storeResponseHeaders(data);
-      console.log(responseHeaderStorage);
 
       let reqArr = data.split('\n');
       let reqSpec = reqArr[0].split(' '); // request type, path and version
@@ -95,9 +93,12 @@ let server = net.createServer((socket) => {
   })
 })
 
+
+
 server.listen(PORT, () => {
   console.log('opened server on', server.address())
 })
+
 
 function storeResponseHeaders(data) {
   let responseHeader = {
