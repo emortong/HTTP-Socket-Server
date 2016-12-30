@@ -40,6 +40,16 @@ if(url === 'localhost') {
   let client = net.connect(PORT, url, () => {
       client.write(header);
   })
+
+    client.on('data', (data) => {
+      body += data;
+    })
+
+    client.on('end', () => {
+      process.stdout.write(body);
+    })
+
+
 } else {
   let client = net.createConnection(80, host, () => {
     client.write(header);
