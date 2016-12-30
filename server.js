@@ -47,7 +47,6 @@ let server = net.createServer((socket) => {
 
       let reqArr = data.split('\n');
       let postMess = reqArr[reqArr.length-1]
-      console.log(postMess)
       let reqSpec = reqArr[0].split(' '); // request type, path and version
       let date = new Date();
       date.toUTCString();

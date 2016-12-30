@@ -10,6 +10,10 @@ let host;
 let method;
 let postMessage = '';
 
+//usage commands :
+// -I === get headers
+// -P + message after url === post message
+
 process.argv.forEach((val, index) => {
   let i;
   if(process.argv.length === 3) {
@@ -59,6 +63,7 @@ if(postMessage !== undefined) {
 if(host === 'localhost') {
   let client = net.connect(PORT, host, () => {
       client.write(header);
+
   })
 
     client.on('data', (data) => {
