@@ -91,7 +91,22 @@ let server = net.createServer((socket) => {
         socket.end();
       }
   })
+
+// server.on('error', (e) => {
+//   if (e.code == 'EADDRINUSE') {
+//     socket.write('Address in use, retrying...');
+//     setTimeout(() => {
+//       server.close();
+//       server.listen(PORT, HOST);
+//     }, 1000);
+//   } else if(e.code == 'ENOTFOUND') {
+//     socket.write('Sorry, we could not get a response')
+//   }
+// });
+
+
 })
+
 
 
 

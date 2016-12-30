@@ -40,10 +40,6 @@ process.argv.forEach((val, index) => {
     }
 
 })
-console.log('host:', host);
-console.log('url: ', url);
-console.log('uri: ', uri);
-console.log('method: ', method);
 
 let header = `${method} ${uri} HTTP/1.1\r\nDate: ${date}\r\nHost: ${host}\r\nUser-Agent: estefania/curl\r\nConnection: close\r\n\r\n`;
 console.log(header);
@@ -60,6 +56,16 @@ if(host === 'localhost') {
       process.stdout.write(body);
     })
 
+    client.on('error', (e) => {
+      if(e.code == 'ENOTFOUND') {
+        process.stdout.write('client cannot be reached\n');
+      } else if(e.code == 'ECONNREFUSED') {
+        process.stdout.write('Connection refused by server\n');
+      } else if(e.code == 'ECONNRESET') {
+        process.stdout.write('The connection closed\n')
+      }
+    })
+
 } else {
   let client = net.createConnection(80, host, () => {
     client.write(header);
@@ -72,4 +78,13 @@ if(host === 'localhost') {
     client.on('end', () => {
       process.stdout.write(body);
     })
+
+    client.on('error', (e) => {
+      if(e.code == 'ENOTFOUND') {
+        process.stdout.write('client cannot be reached\n');
+      } else if(e.code == 'ECONNREFUSED') {
+        process.stdout.write('Connection refused by server\n');
+      }
+    })
 }
+
