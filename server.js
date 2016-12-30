@@ -8,6 +8,7 @@ const notFound = require('./404.js');
 const styles = require('./styles.js');
 let host;
 let responseHeaderStorage = [];
+let postMessageStorage = [];
 
 let files = {
   index: {
@@ -45,6 +46,8 @@ let server = net.createServer((socket) => {
       storeResponseHeaders(data);
 
       let reqArr = data.split('\n');
+      let postMess = reqArr[reqArr.length-1]
+      console.log(postMess)
       let reqSpec = reqArr[0].split(' '); // request type, path and version
       let date = new Date();
       date.toUTCString();
@@ -89,21 +92,13 @@ let server = net.createServer((socket) => {
         socket.write(header);
         socket.write(body);
         socket.end();
+      } else if(reqSpec[0] === 'POST') {
+        postStorage(postMess, date)
+        socket.write(`succesfull post\n`)
+        console.log(postMessageStorage);
+        socket.end();
       }
   })
-
-// server.on('error', (e) => {
-//   if (e.code == 'EADDRINUSE') {
-//     socket.write('Address in use, retrying...');
-//     setTimeout(() => {
-//       server.close();
-//       server.listen(PORT, HOST);
-//     }, 1000);
-//   } else if(e.code == 'ENOTFOUND') {
-//     socket.write('Sorry, we could not get a response')
-//   }
-// });
-
 
 })
 
@@ -120,4 +115,12 @@ function storeResponseHeaders(data) {
     header: data
   }
   responseHeaderStorage.push(responseHeader);
+}
+
+function postStorage(message, date) {
+  let post = {
+    post: message,
+    date: date
+  }
+  postMessageStorage.push(post);
 }

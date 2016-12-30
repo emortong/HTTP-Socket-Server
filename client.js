@@ -8,6 +8,7 @@ let date = new Date();
 date.toUTCString();
 let host;
 let method;
+let postMessage = '';
 
 process.argv.forEach((val, index) => {
   let i;
@@ -17,6 +18,13 @@ process.argv.forEach((val, index) => {
   } else if(process.argv.indexOf('-I') !== -1) {
     i = 3;
     method = 'HEAD';
+  } else if(process.argv.indexOf('-P') !== -1) {
+    i = 3;
+    method = 'POST';
+    if(index >= 4) {
+      console.log(val);
+      postMessage += `${val.toString()} `;
+    }
   }
 
   if(index === i) {
@@ -41,8 +49,13 @@ process.argv.forEach((val, index) => {
 
 })
 
+
 let header = `${method} ${uri} HTTP/1.1\r\nDate: ${date}\r\nHost: ${host}\r\nUser-Agent: estefania/curl\r\nConnection: close\r\n\r\n`;
-console.log(header);
+
+if(postMessage !== undefined) {
+  header += `Post Message:\r\n${postMessage}`;
+}
+
 if(host === 'localhost') {
   let client = net.connect(PORT, host, () => {
       client.write(header);
@@ -84,6 +97,8 @@ if(host === 'localhost') {
         process.stdout.write('client cannot be reached\n');
       } else if(e.code == 'ECONNREFUSED') {
         process.stdout.write('Connection refused by server\n');
+      } else if(e.code == 'ECONNRESET') {
+        process.stdout.write('The connection closed\n')
       }
     })
 }
